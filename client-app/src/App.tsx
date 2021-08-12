@@ -2,22 +2,28 @@ import { useEffect, useState } from 'react';
 import './App.css';
 import axios from 'axios';
 import { Header, List } from 'semantic-ui-react';
+import { Activity } from './shared/models/activity';
 
 function App() {
   const [activities, setActivities] = useState([]);
   useEffect(() => {
-    axios.get('https://localhost:5001/api/activities').then(response => {
-      console.log(response);
-      setActivities(response.data);
-    });
+    async function fetchData() {
+      try {
+        const response = await axios.get('https://localhost:5001/api/activities');
+        setActivities(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();  
   }, []);
+
 
   return (
     <div>
-      <Header as='h2' icon='users' content='Reactivities' />
-      
+      <Header as='h2' icon='users' content='Reactivities' />      
         <List>
-          {activities.map((activity: any) => (
+          {activities.map((activity: Activity) => (
             <List.Item key={activity.id}>
               {activity.title}
             </List.Item>
